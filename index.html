@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Guess the Number</title>
+  <style>
+    :root{
+      --bg:#f7fafc; --card:#ffffff; --accent:#2563eb; --muted:#6b7280;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    body{
+      margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(135deg,#eef2ff 0%, #fef3c7 100%);
+      color:#111827;
+    }
+    .card{
+      width:min(720px,96%); background:var(--card); border-radius:12px; padding:20px; box-shadow:0 8px 30px rgba(2,6,23,0.12);
+    }
+    h1{ margin:0 0 8px; font-size:1.25rem;}
+    p.lead{ margin:0 0 16px; color:var(--muted); }
+    .controls{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px; align-items:center; }
+    label{ font-size:0.875rem; color:var(--muted); display:flex; gap:6px; align-items:center; }
+    input[type="number"]{ width:100px; padding:8px; border-radius:8px; border:1px solid #e5e7eb; }
+    input[type="text"]{ padding:8px; border-radius:8px; border:1px solid #e5e7eb; width:160px; }
+    button{ background:var(--accent); color:white; border:none; padding:10px 12px; border-radius:8px; cursor:pointer; }
+    button.secondary{ background:#f3f4f6; color:#111827; border:1px solid #e5e7eb; }
+    .status{ padding:12px; border-radius:8px; margin-bottom:12px; min-height:48px; display:flex; align-items:center; gap:12px; }
+    .status.good{ background:#ecfdf5; color:#065f46; border:1px solid #bbf7d0; }
+    .status.warn{ background:#fff7ed; color:#7c2d12; border:1px solid #ffd8a8; }
+    .status.info{ background:#eef2ff; color:#1e3a8a; border:1px solid #bfdbfe; }
+    .meta{ display:flex; gap:12px; flex-wrap:wrap; color:var(--muted); font-size:0.9rem; margin-bottom:10px;}
+    .history{ max-height:120px; overflow:auto; padding:8px; border-radius:8px; border:1px dashed #e6edf3; background:#fcfeff; font-family:monospace; font-size:0.95rem;}
+    .hidden{ display:none; }
+    @media (max-width:480px){
+      .controls{ flex-direction:column; align-items:stretch; }
+      input[type="number"], input[type="text"]{ width:100%; }
+      .meta{ flex-direction:column; align-items:flex-start;}
+    }
+  </style>
+</head>
+<body>
+  <main class="card" role="main" aria-labelledby="title">
+    <h1 id="title">Guess the Number</h1>
+    <p class="lead">Try to guess the secret integer. Get hints and track attempts. Use the settings to change the range or limit attempts.</p>
+
+    <section aria-labelledby="settings-heading">
+      <h2 id="settings-heading" style="font-size:0.95rem;margin:0 0 8px">Settings</h2>
+      <div class="controls" role="group" aria-label="Game settings">
+        <label>
+          Min
+          <input id="min" type="number" value="1" inputmode="numeric" />
+        </label>
+        <label>
+          Max
+          <input id="max" type="number" value="100" inputmode="numeric" />
+        </label>
+        <label title="Leave blank for unlimited attempts">
+          Max attempts
+          <input id="attempts" type="number" min="1" placeholder="Unlimited" />
+        </label>
+        <button id="start" class="secondary" aria-live="polite">Start / Restart</button>
+      </div>
+    </section>
+
+    <div id="status" class="status info" role="status" aria-live="polite">
+      Click "Start / Restart" to begin a new game.
+    </div>
+
+    <section aria-labelledby="play-heading">
+      <h2 id="play-heading" style="font-size:0.95rem;margin:0 0 8px">Play</h2>
+      <form id="guess-form" class="controls" onsubmit="return false;" aria-label="Make a guess">
+        <label style="flex:1;">
+          Your guess
+          <input id="guess-input" type="number" inputmode="numeric" disabled />
+        </label>
+        <button id="guess-btn" disabled>Guess</button>
+        <button id="giveup" type="button" class="secondary" disabled>Give up</button>
+      </form>
+
+      <div class="meta" aria-hidden="false">
+        <div id="range-meta">Range: —</div>
+        <div
